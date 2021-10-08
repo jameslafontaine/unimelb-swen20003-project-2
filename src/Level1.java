@@ -20,7 +20,7 @@ public class Level1 extends Level {
     private static final int SCORE_THRESHOLD = 30;
     private static final int LEVEL_ZERO = 0;
     protected static final int LEVEL_ONE = 1;
-    private int weaponFrameCount = 1;
+    private int weaponFrameCount = pipeSpawnFrequency / 2;
 
 
     public Level1() {
@@ -32,7 +32,11 @@ public class Level1 extends Level {
     }
 
     private void generateWeapon() {
-
+        if (Math.random() < 0.5) {
+            weapons.add(new Rock());
+        } else {
+            weapons.add(new Bomb());
+        }
     }
 
     private void keepWeaponAttached() {
@@ -86,11 +90,18 @@ public class Level1 extends Level {
                 for (PipeSet pipeSet: pipeSets) {
                     pipeSet.update();
                 }
+                for (Weapon weapon: weapons) {
+                    weapon.update(input);
+                }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
                 renderLifeBar();
                 if (pipeFrameCount == pipeSpawnFrequency) {
                     generatePipeSet();
-                    pipeFrameCount = 1;
+                    pipeFrameCount = 0;
+                }
+                if (weaponFrameCount == pipeSpawnFrequency * 2) {
+                    generateWeapon();
+                    weaponFrameCount = 0;
                 }
                 detectCollision();
                 detectOutOfBounds();

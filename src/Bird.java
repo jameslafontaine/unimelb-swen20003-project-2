@@ -10,7 +10,7 @@ public class Bird {
     // constants adjusted for FPS reasons
     private static final double GRAVITY = -0.1;
     private static final double TERMINAL_VELOCITY = -4;
-    private static final double FLIGHT_SPEED = 3;
+    private static final double FLIGHT_SPEED = 3.5;
 
     private final double x = START_POINT.x;
     private double y = START_POINT.y;

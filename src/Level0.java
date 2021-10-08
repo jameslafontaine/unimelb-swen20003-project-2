@@ -70,7 +70,7 @@ public class Level0 extends Level {
                 renderLifeBar();
                 if (pipeFrameCount == pipeSpawnFrequency) {
                     generatePipeSet();
-                    pipeFrameCount = 1;
+                    pipeFrameCount = 0;
                 }
                 detectCollision();
                 detectOutOfBounds();
