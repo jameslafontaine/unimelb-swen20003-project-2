@@ -6,17 +6,20 @@ import java.util.ArrayList;
 public class Level0 extends Level {
 
     private static final String LEVELUP_MESSAGE = "LEVEL-UP!";
-    private static final int LEVELUP_DURATION = 20;
+    // adjusted for FPS reasons
+    private static final int LEVELUP_DURATION = 350;
     private static final Image BIRD_WING_DOWN = new Image("res/level-0/birdWingDown.png");
     private static final Image BIRD_WING_UP = new Image("res/level-0/birdWingUp.png");
     private static final int STARTING_LIVES = 3;
     private static final int SCORE_THRESHOLD = 10;
+    private static final int LEVEL_ZERO = 0;
+    private int levelUpFrameCount = 1;
 
 
     public Level0() {
         background = new Image("res/level-0/background.png");
         bird =  new Bird(BIRD_WING_DOWN, BIRD_WING_UP);
-        startingLives = STARTING_LIVES;
+        lives = STARTING_LIVES;
         scoreThreshold = SCORE_THRESHOLD;
     }
 
@@ -24,18 +27,18 @@ public class Level0 extends Level {
         for (PipeSet pipeSet: pipeSets) {
             if (bird.getHitbox().intersects(pipeSet.getHitBoxTop()) ||
                     bird.getHitbox().intersects(pipeSet.getHitboxBottom())) {
-                lives -= 1;
+                lives--;
                 pipeSets.remove(pipeSet);
             }
         }
     }
 
     protected void maintainTimescale() {
-
+        return;
     }
 
     protected void generatePipeSet() {
-
+        pipeSets.add(new PlasticPipeSet(LEVEL_ZERO));
     }
 
     protected void drawStartMessage() {
@@ -62,10 +65,19 @@ public class Level0 extends Level {
                     pipeSet.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
+
+                if (pipeFrameCount == pipeSpawnFrequency) {
+                    generatePipeSet();
+                    pipeFrameCount = 1;
+                }
+                detectCollision();
+                detectOutOfBounds();
+                detectPipePass();
+                pipeFrameCount++;
             } else if (score == scoreThreshold) {
-                if (frameCount <= LEVELUP_DURATION) {
+                if (levelUpFrameCount <= LEVELUP_DURATION) {
                     drawEndMessage(LEVELUP_MESSAGE);
-                    frameCount += 1;
+                    levelUpFrameCount++;
                 } else {
                     levelCompleted = true;
                 }
