@@ -7,7 +7,6 @@ public abstract class PipeSet {
     protected static final int HIGH_GAP_CENTRE = 184;
     protected static final int MID_GAP_CENTRE = 384;
     protected static final int LOW_GAP_CENTRE = 584;
-    protected static final int LEVEL_ZERO = 0;
     protected static final int START_X = ShadowFlap.WINDOW_WIDTH;
     protected double xTop = START_X;
     protected double yTop;
@@ -16,7 +15,8 @@ public abstract class PipeSet {
     protected Image pipeImage;
     protected Rectangle hitboxTop;
     protected Rectangle hitboxBottom;
-    protected int stepSize = 3;
+    // adjusted for FPS reasons
+    protected double stepSize = 2.5;
     protected boolean hasPassed = false;
 
 

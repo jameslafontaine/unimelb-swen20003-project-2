@@ -31,7 +31,7 @@ public abstract class Level {
     protected int lives;
     protected int pipeFrameCount = 1;
     // adjusted for FPS reasons
-    protected int pipeSpawnFrequency = 200;
+    protected int pipeSpawnFrequency = 300;
     protected boolean levelStarted = false;
     protected boolean levelCompleted = false;
 

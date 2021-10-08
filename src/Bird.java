@@ -9,8 +9,8 @@ public class Bird {
     private static final int FLAP_FRAME = 10;
     // constants adjusted for FPS reasons
     private static final double GRAVITY = -0.1;
-    private static final double TERMINAL_VELOCITY = -10;
-    private static final double FLIGHT_SPEED = 4;
+    private static final double TERMINAL_VELOCITY = -4;
+    private static final double FLIGHT_SPEED = 3;
 
     private final double x = START_POINT.x;
     private double y = START_POINT.y;
@@ -59,9 +59,8 @@ public class Bird {
         }
 
         // visualise the bird's hitbox
-
-        // Drawing.drawRectangle(new Point(x - birdWingDown.getWidth() / 2.0, y - birdWingDown.getHeight() / 2.0),
-        //                                                birdWingDown.getWidth(), birdWingDown.getHeight(), Colour.WHITE);
+        //Drawing.drawRectangle(new Point(x - birdWingDown.getWidth() / 2.0, y - birdWingDown.getHeight() / 2.0),
+          //                                             birdWingDown.getWidth(), birdWingDown.getHeight(), Colour.WHITE);
 
 
     }

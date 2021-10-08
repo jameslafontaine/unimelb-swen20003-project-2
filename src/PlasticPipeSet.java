@@ -2,12 +2,13 @@ import bagel.*;
 import bagel.util.*;
 
 public class PlasticPipeSet extends PipeSet {
+    private static final int LEVEL_ZERO = 0;
 
     public PlasticPipeSet(int currentLevel) {
         pipeImage = new Image("res/level/plasticPipe.png");
+        double randomNum = Math.random();
         if (currentLevel == LEVEL_ZERO) {
             // use level 0 pipe spawning logic
-            double randomNum = Math.random();
             if (randomNum < 1 / 3.0) {
                 yTop = HIGH_GAP_CENTRE - pipeImage.getHeight() / 2.0 - PIPE_GAP / 2.0;
                 yBottom = HIGH_GAP_CENTRE + pipeImage.getHeight() / 2.0 + PIPE_GAP / 2.0;
@@ -19,7 +20,12 @@ public class PlasticPipeSet extends PipeSet {
                 yBottom = LOW_GAP_CENTRE + pipeImage.getHeight() / 2.0 + PIPE_GAP / 2.0;
             }
         } else {
-            // use level 1 pipe spawning logic (random bounded y coordinate)
+            // use level 1 pipe spawning logic
+            // (i.e. random y coordinate with the centre of the gap bounded between [184, 584])
+            yTop = randomNum * (HIGH_GAP_CENTRE - LOW_GAP_CENTRE) + LOW_GAP_CENTRE
+                                                                      - pipeImage.getHeight() / 2.0 - PIPE_GAP / 2.0;
+            yBottom = randomNum * (HIGH_GAP_CENTRE - LOW_GAP_CENTRE) + LOW_GAP_CENTRE
+                                                                         + pipeImage.getHeight() / 2.0 + PIPE_GAP / 2.0;
         }
         hitboxTop = pipeImage.getBoundingBoxAt(new Point(xTop, yTop));
         hitboxBottom = pipeImage.getBoundingBoxAt(new Point(xBottom, yBottom));

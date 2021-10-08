@@ -18,7 +18,7 @@ public class Level0 extends Level {
 
     public Level0() {
         background = new Image("res/level-0/background.png");
-        bird =  new Bird(BIRD_WING_DOWN, BIRD_WING_UP);
+        bird = new Bird(BIRD_WING_DOWN, BIRD_WING_UP);
         startingLives = STARTING_LIVES;
         lives = STARTING_LIVES;
         scoreThreshold = SCORE_THRESHOLD;
@@ -50,15 +50,16 @@ public class Level0 extends Level {
 
     public void update(Input input) {
 
-        // display the starting message until the player presses space bar for the first time and starts the game
+        // display the starting message until the player presses space bar for the first time and starts the level
         if (!levelStarted) {
             drawStartMessage();
             if (input.wasPressed(Keys.SPACE)) {
                 levelStarted = true;
             }
-            // otherwise, the game has started, and we must constantly update and draw the bird and pipes' positions.
-            // we must also draw the score counter and detect if a win or a loss has occurred
         } else {
+            // otherwise, the level has started, and we must constantly update and draw the bird and pipes' positions.
+            // we must draw the score counter and life bar and generate pipe sets.
+            // we also have to detect for pipe passes, collisions, and out of bounds
             if (score < scoreThreshold && lives > NO_LIVES) {
                 background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
                 bird.update(input);
