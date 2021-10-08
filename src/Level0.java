@@ -19,6 +19,7 @@ public class Level0 extends Level {
     public Level0() {
         background = new Image("res/level-0/background.png");
         bird =  new Bird(BIRD_WING_DOWN, BIRD_WING_UP);
+        startingLives = STARTING_LIVES;
         lives = STARTING_LIVES;
         scoreThreshold = SCORE_THRESHOLD;
     }
@@ -65,7 +66,7 @@ public class Level0 extends Level {
                     pipeSet.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
-
+                renderLifeBar();
                 if (pipeFrameCount == pipeSpawnFrequency) {
                     generatePipeSet();
                     pipeFrameCount = 1;

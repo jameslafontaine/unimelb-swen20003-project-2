@@ -27,6 +27,7 @@ public abstract class Level {
     protected int scoreThreshold;
     protected int score = 0;
     protected int timescale = 1;
+    protected int startingLives;
     protected int lives;
     protected int pipeFrameCount = 1;
     // adjusted for FPS reasons
@@ -65,10 +66,13 @@ public abstract class Level {
         }
     }
 
-
-
     protected void renderLifeBar() {
-
+        for (int i=0; i < lives; i++) {
+            FULL_LIFE.drawFromTopLeft(LIFE_POINT.x + i*LIFE_GAP , LIFE_POINT.y);
+        }
+        for (int i=lives; i < startingLives; i++) {
+            NO_LIFE.drawFromTopLeft(LIFE_POINT.x + i*LIFE_GAP, LIFE_POINT.y);
+        }
     }
 
     protected void drawEndMessage(String message) {
