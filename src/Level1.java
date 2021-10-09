@@ -1,5 +1,4 @@
 import bagel.*;
-import bagel.util.*;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -155,7 +154,7 @@ public class Level1 extends Level {
                     weapon.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
-                FONT.drawString("TIMESCALE " + timescale, SCORE_POINT.x, SCORE_POINT.y + 100);
+                // FONT.drawString("TIMESCALE " + timescale, SCORE_POINT.x, SCORE_POINT.y + 100);
                 renderLifeBar();
                 if (pipeFrameCount >= pipeSpawnFrequency) {
                     generatePipeSet();
