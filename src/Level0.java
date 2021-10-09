@@ -2,6 +2,7 @@ import bagel.*;
 import bagel.util.*;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Level0 extends Level {
 
@@ -25,17 +26,15 @@ public class Level0 extends Level {
     }
 
     protected void detectCollision() {
-        for (PipeSet pipeSet: pipeSets) {
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
             if (bird.getHitbox().intersects(pipeSet.getHitBoxTop()) ||
                     bird.getHitbox().intersects(pipeSet.getHitboxBottom())) {
                 lives--;
-                pipeSets.remove(pipeSet);
+                iterPipeSet.remove();
             }
         }
-    }
-
-    protected void changeTimescale(int change) {
-        return;
     }
 
     protected void generatePipeSet() {
@@ -50,6 +49,7 @@ public class Level0 extends Level {
 
     public void update(Input input) {
 
+
         // display the starting message until the player presses space bar for the first time and starts the level
         if (!levelStarted) {
             drawStartMessage();
@@ -61,14 +61,28 @@ public class Level0 extends Level {
             // we must draw the score counter and life bar and generate pipe sets.
             // we also have to detect for pipe passes, collisions, and out of bounds
             if (score < scoreThreshold && lives > NO_LIVES) {
+                // timescale adjustments
+                if (input.wasPressed(Keys.L) && timescale < MAX_TIMESCALE) {
+                    PipeSet.increaseStepSize();
+                    pipeSpawnFrequency = (int) Math.round(pipeSpawnFrequency / TIMESCALE_FACTOR);
+                    pipeFrameCount = (int) Math.round(pipeFrameCount / TIMESCALE_FACTOR);
+                    timescale++;
+                }
+                if (input.wasPressed(Keys.K) && timescale > MIN_TIMESCALE) {
+                    PipeSet.decreaseStepSize();
+                    pipeSpawnFrequency = (int) Math.round(pipeSpawnFrequency * TIMESCALE_FACTOR);
+                    pipeFrameCount = (int) Math.round(pipeFrameCount * TIMESCALE_FACTOR);
+                    timescale--;
+                }
                 background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
                 bird.update(input);
                 for (PipeSet pipeSet: pipeSets) {
                     pipeSet.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
+                FONT.drawString("TIMESCALE " + timescale, SCORE_POINT.x, SCORE_POINT.y + 100);
                 renderLifeBar();
-                if (pipeFrameCount == pipeSpawnFrequency) {
+                if (pipeFrameCount >= pipeSpawnFrequency) {
                     generatePipeSet();
                     pipeFrameCount = 0;
                 }

@@ -2,6 +2,7 @@ import bagel.*;
 import bagel.util.*;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public abstract class Level {
     protected Image background;
@@ -24,8 +25,7 @@ public abstract class Level {
     protected static final int WINDOW_HEIGHT = ShadowFlap.WINDOW_HEIGHT;
     protected static final int LEFT_BORDER = 0;
     protected static final Point CENTRE_SCREEN = new Point(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0);
-    protected static final int INCREASE = 1;
-    protected static final int DECREASE = -1;
+    protected static final double TIMESCALE_FACTOR = 1.5;
     protected int scoreThreshold;
     protected int score = 0;
     protected int timescale = 1;
@@ -40,7 +40,6 @@ public abstract class Level {
 
     public abstract void update(Input input);
     protected abstract void detectCollision();
-    protected abstract void changeTimescale(int change);
     protected abstract void generatePipeSet();
     protected abstract void drawStartMessage();
 
@@ -52,9 +51,11 @@ public abstract class Level {
             lives--;
             bird.resetPosition();
         }
-        for (PipeSet pipeSet: pipeSets) {
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
             if (pipeSet.getRightX() < LEFT_BORDER) {
-                pipeSets.remove(pipeSet);
+                iterPipeSet.remove();
             }
         }
     }

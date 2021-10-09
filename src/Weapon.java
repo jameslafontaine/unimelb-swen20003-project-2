@@ -8,6 +8,7 @@ public class Weapon {
     protected final Point START_POINT = new Point(ShadowFlap.WINDOW_WIDTH, Math.random() * (MAX_Y - MIN_Y) + MIN_Y);
     // adjusted for FPS reasons
     protected static final double SHOOT_SPEED = 2.5;
+    protected static final double TIMESCALE_FACTOR = 1.5;
     protected double x = START_POINT.x;
     protected double y = START_POINT.y;
     protected double shootingRange;
@@ -36,6 +37,10 @@ public class Weapon {
     public void setX(double x) { this.x = x; }
 
     public void setY(double y) { this.y = y; }
+
+    public static void increaseStepSize() { stepSize *= TIMESCALE_FACTOR; }
+
+    public static void decreaseStepSize() { stepSize /= TIMESCALE_FACTOR; }
 
     public void update() {
         if (!isAttached && !wasShot) {

@@ -11,12 +11,12 @@ public class ShadowFlap extends AbstractGame {
     private static final int NUM_LEVELS = 2;
     private static final int LEVEL_ZERO = 0;
     private static final int LEVEL_ONE = 1;
-    private int currentLevel = 1;
+    private int currentLevel = 0;
     private Level[] levels = new Level[NUM_LEVELS];
 
     public ShadowFlap() {
         super(WINDOW_WIDTH, WINDOW_HEIGHT, "ShadowFlap");
-        // levels[LEVEL_ZERO] = new Level0();
+        levels[LEVEL_ZERO] = new Level0();
         levels[LEVEL_ONE] = new Level1();
     }
 

@@ -7,7 +7,7 @@ import java.util.ListIterator;
 public class Level1 extends Level {
 
     private ArrayList<Weapon> weapons = new ArrayList<>();
-    private static final String SHOOT_MESSAGE = "PRESS 'S TO SHOOT";
+    private static final String SHOOT_MESSAGE = "PRESS 'S' TO SHOOT";
     private static final int SHOOT_MESSAGE_GAP = 68;
     private static final String WIN_MESSAGE = "CONGRATULATIONS!";
     // adjusted for FPS reasons
@@ -15,8 +15,7 @@ public class Level1 extends Level {
     private static final Image BIRD_WING_UP = new Image("res/level-1/birdWingUp.png");
     private static final int STARTING_LIVES = 6;
     private static final int SCORE_THRESHOLD = 30;
-    private static final int LEVEL_ZERO = 0;
-    protected static final int LEVEL_ONE = 1;
+    private static final int LEVEL_ONE = 1;
     private int weaponFrameCount = pipeSpawnFrequency / 2;
 
 
@@ -47,15 +46,17 @@ public class Level1 extends Level {
 
     protected void detectCollision() {
         // check if the bird has collided with a pipe
-        for (PipeSet pipeSet: pipeSets) {
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
             if (bird.getHitbox().intersects(pipeSet.getHitBoxTop()) ||
                     bird.getHitbox().intersects(pipeSet.getHitboxBottom())) {
                 lives--;
-                pipeSets.remove(pipeSet);
+                iterPipeSet.remove();
             }
         }
         // check for weapon collisions with pipes
-        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        iterPipeSet = pipeSets.listIterator();
         while(iterPipeSet.hasNext()) {
             PipeSet pipeSet = iterPipeSet.next();
             ListIterator<Weapon> iterWeapon = weapons.listIterator();
@@ -89,10 +90,6 @@ public class Level1 extends Level {
         weapons.removeIf(weapon -> weapon.getWasShot() && weapon.getFramesTravelled() > weapon.getShootingRange());
     }
 
-    protected void changeTimescale(int change) {
-        return;
-    }
-
     protected void generatePipeSet() {
        if (Math.random() < 0.5) {
            pipeSets.add(new PlasticPipeSet(LEVEL_ONE));
@@ -110,27 +107,45 @@ public class Level1 extends Level {
     }
 
     public void update(Input input) {
-        // shoot a held weapon when the S key is pressed
-        if (input.wasPressed(Keys.S) && bird.getHoldingWeapon()) {
-            for (Weapon weapon: weapons) {
-                if (weapon.getIsAttached()) {
-                    weapon.setWasShot(true);
-                    weapon.setIsAttached(false);
-                    bird.setHoldingWeapon(false);
-                }
-            }
-        }
         // display the starting message until the player presses space bar for the first time and starts the level
         if (!levelStarted) {
             drawStartMessage();
             if (input.wasPressed(Keys.SPACE)) {
                 levelStarted = true;
+                PipeSet.resetStepSize();
             }
         } else {
             // otherwise, the level has started, and we must constantly update and draw the bird and pipes' positions.
             // we must draw the score counter and life bar, and generate pipe sets and weapons.
             // we also have to detect pipe passes, collisions, and out of bounds.
             if (score < scoreThreshold && lives > NO_LIVES) {
+                // timescale adjustments
+                if (input.wasPressed(Keys.L) && timescale < MAX_TIMESCALE) {
+                    PipeSet.increaseStepSize();
+                    Weapon.increaseStepSize();
+                    pipeSpawnFrequency = (int) Math.round(pipeSpawnFrequency / TIMESCALE_FACTOR);
+                    pipeFrameCount = (int) Math.round(pipeFrameCount / TIMESCALE_FACTOR);
+                    weaponFrameCount = (int) Math.round(weaponFrameCount / TIMESCALE_FACTOR);
+                    timescale++;
+                }
+                if (input.wasPressed(Keys.K) && timescale > MIN_TIMESCALE) {
+                    PipeSet.decreaseStepSize();
+                    Weapon.decreaseStepSize();
+                    pipeSpawnFrequency = (int) Math.round(pipeSpawnFrequency * TIMESCALE_FACTOR);
+                    pipeFrameCount = (int) Math.round(pipeFrameCount * TIMESCALE_FACTOR);
+                    weaponFrameCount = (int) Math.round(weaponFrameCount * TIMESCALE_FACTOR);
+                    timescale--;
+                }
+                // shoot a held weapon when the S key is pressed
+                if (input.wasPressed(Keys.S) && bird.getHoldingWeapon()) {
+                    for (Weapon weapon: weapons) {
+                        if (weapon.getIsAttached()) {
+                            weapon.setWasShot(true);
+                            weapon.setIsAttached(false);
+                            bird.setHoldingWeapon(false);
+                        }
+                    }
+                }
                 background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
                 bird.update(input);
                 for (PipeSet pipeSet: pipeSets) {
@@ -140,12 +155,13 @@ public class Level1 extends Level {
                     weapon.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
+                FONT.drawString("TIMESCALE " + timescale, SCORE_POINT.x, SCORE_POINT.y + 100);
                 renderLifeBar();
-                if (pipeFrameCount == pipeSpawnFrequency) {
+                if (pipeFrameCount >= pipeSpawnFrequency) {
                     generatePipeSet();
                     pipeFrameCount = 0;
                 }
-                if (weaponFrameCount == pipeSpawnFrequency * 2) {
+                if (weaponFrameCount >= pipeSpawnFrequency * 2) {
                     generateWeapon();
                     weaponFrameCount = 0;
                 }
@@ -156,6 +172,7 @@ public class Level1 extends Level {
                 checkWeaponTravel();
                 pipeFrameCount++;
                 weaponFrameCount++;
+
             } else if (score == scoreThreshold) {
                 drawEndMessage(WIN_MESSAGE);
             } else if (lives == NO_LIVES) {

@@ -8,6 +8,8 @@ public abstract class PipeSet {
     protected static final int MID_GAP_CENTRE = 384;
     protected static final int LOW_GAP_CENTRE = 584;
     protected static final int START_X = ShadowFlap.WINDOW_WIDTH;
+    protected static final double TIMESCALE_FACTOR = 1.5;
+    protected static final double DEFAULT_STEP_SIZE = 2.5;
     protected double xTop = START_X;
     protected double yTop;
     protected double xBottom = START_X;
@@ -40,6 +42,12 @@ public abstract class PipeSet {
     public boolean getHasPassed() { return hasPassed; }
 
     public void setHasPassed(boolean state) { hasPassed = state; }
+
+    public static void increaseStepSize() { stepSize *= TIMESCALE_FACTOR; }
+
+    public static void decreaseStepSize() { stepSize /= TIMESCALE_FACTOR; }
+
+    public static void resetStepSize() { stepSize = DEFAULT_STEP_SIZE; }
 
     public abstract void update();
 
