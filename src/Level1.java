@@ -2,6 +2,7 @@ import bagel.*;
 import bagel.util.*;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Level1 extends Level {
 
@@ -9,10 +10,6 @@ public class Level1 extends Level {
     private static final String SHOOT_MESSAGE = "PRESS 'S TO SHOOT";
     private static final int SHOOT_MESSAGE_GAP = 68;
     private static final String WIN_MESSAGE = "CONGRATULATIONS!";
-    private static final int ROCK = 1;
-    private static final int BOMB = 2;
-    private static final int PLASTIC = 1;
-    private static final int STEEL = 2;
     // adjusted for FPS reasons
     private static final Image BIRD_WING_DOWN = new Image("res/level-1/birdWingDown.png");
     private static final Image BIRD_WING_UP = new Image("res/level-1/birdWingUp.png");
@@ -40,10 +37,16 @@ public class Level1 extends Level {
     }
 
     private void keepWeaponAttached() {
-
+        for (Weapon weapon: weapons) {
+            if (weapon.getIsAttached()) {
+                weapon.setX(bird.getHitbox().right());
+                weapon.setY(bird.getPosition().y);
+            }
+        }
     }
 
     protected void detectCollision() {
+        // check if the bird has collided with a pipe
         for (PipeSet pipeSet: pipeSets) {
             if (bird.getHitbox().intersects(pipeSet.getHitBoxTop()) ||
                     bird.getHitbox().intersects(pipeSet.getHitboxBottom())) {
@@ -51,9 +54,42 @@ public class Level1 extends Level {
                 pipeSets.remove(pipeSet);
             }
         }
+        // check for weapon collisions with pipes
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
+            ListIterator<Weapon> iterWeapon = weapons.listIterator();
+            while(iterWeapon.hasNext()) {
+                Weapon weapon = iterWeapon.next();
+                if (weapon.getWasShot() && (weapon.getHitbox().intersects(pipeSet.getTrueHitboxTop())
+                        || weapon.getHitbox().intersects(pipeSet.getTrueHitboxBottom()))) {
+
+                    if (weapon instanceof Rock && pipeSet instanceof PlasticPipeSet) {
+                        iterPipeSet.remove();
+                        score++;
+                    } else if (weapon instanceof Bomb) {
+                        iterPipeSet.remove();
+                        score++;
+                    }
+                    iterWeapon.remove();
+                }
+            }
+        }
+        // check if the bird is picking up an unfired weapon when it isn't currently holding one
+        for (Weapon weapon: weapons) {
+            if (bird.getHitbox().intersects(weapon.getHitbox()) && !weapon.getIsAttached() && !weapon.getWasShot()
+                                                                && !bird.getHoldingWeapon()) {
+                weapon.setIsAttached(true);
+                bird.setHoldingWeapon(true);
+            }
+        }
     }
 
-    protected void maintainTimescale() {
+    private void checkWeaponTravel() {
+        weapons.removeIf(weapon -> weapon.getWasShot() && weapon.getFramesTravelled() > weapon.getShootingRange());
+    }
+
+    protected void changeTimescale(int change) {
         return;
     }
 
@@ -74,6 +110,16 @@ public class Level1 extends Level {
     }
 
     public void update(Input input) {
+        // shoot a held weapon when the S key is pressed
+        if (input.wasPressed(Keys.S) && bird.getHoldingWeapon()) {
+            for (Weapon weapon: weapons) {
+                if (weapon.getIsAttached()) {
+                    weapon.setWasShot(true);
+                    weapon.setIsAttached(false);
+                    bird.setHoldingWeapon(false);
+                }
+            }
+        }
         // display the starting message until the player presses space bar for the first time and starts the level
         if (!levelStarted) {
             drawStartMessage();
@@ -82,7 +128,7 @@ public class Level1 extends Level {
             }
         } else {
             // otherwise, the level has started, and we must constantly update and draw the bird and pipes' positions.
-            // we must draw the score counter and life bar and generate pipe sets.
+            // we must draw the score counter and life bar, and generate pipe sets and weapons.
             // we also have to detect pipe passes, collisions, and out of bounds.
             if (score < scoreThreshold && lives > NO_LIVES) {
                 background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
@@ -91,7 +137,7 @@ public class Level1 extends Level {
                     pipeSet.update();
                 }
                 for (Weapon weapon: weapons) {
-                    weapon.update(input);
+                    weapon.update();
                 }
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
                 renderLifeBar();
@@ -106,6 +152,8 @@ public class Level1 extends Level {
                 detectCollision();
                 detectOutOfBounds();
                 detectPipePass();
+                keepWeaponAttached();
+                checkWeaponTravel();
                 pipeFrameCount++;
                 weaponFrameCount++;
             } else if (score == scoreThreshold) {

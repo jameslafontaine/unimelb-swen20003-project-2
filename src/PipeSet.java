@@ -16,7 +16,7 @@ public abstract class PipeSet {
     protected Rectangle hitboxTop;
     protected Rectangle hitboxBottom;
     // adjusted for FPS reasons
-    protected double stepSize = 2.5;
+    protected static double stepSize = 2.5;
     protected boolean hasPassed = false;
 
 
@@ -24,6 +24,10 @@ public abstract class PipeSet {
 
 
     public double getRightX() { return hitboxTop.right(); }
+
+    public Rectangle getTrueHitboxTop() { return new Rectangle(hitboxTop.left(), yTop - pipeImage.getHeight() / 2.0, pipeImage.getWidth(), pipeImage.getHeight()); }
+
+    public Rectangle getTrueHitboxBottom() { return new Rectangle(hitboxBottom.left(), yBottom - pipeImage.getHeight() / 2.0, pipeImage.getWidth(), pipeImage.getHeight()); }
 
     public Rectangle getHitBoxTop() {
         return hitboxTop;

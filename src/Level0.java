@@ -34,7 +34,7 @@ public class Level0 extends Level {
         }
     }
 
-    protected void maintainTimescale() {
+    protected void changeTimescale(int change) {
         return;
     }
 

@@ -24,6 +24,8 @@ public abstract class Level {
     protected static final int WINDOW_HEIGHT = ShadowFlap.WINDOW_HEIGHT;
     protected static final int LEFT_BORDER = 0;
     protected static final Point CENTRE_SCREEN = new Point(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0);
+    protected static final int INCREASE = 1;
+    protected static final int DECREASE = -1;
     protected int scoreThreshold;
     protected int score = 0;
     protected int timescale = 1;
@@ -38,7 +40,7 @@ public abstract class Level {
 
     public abstract void update(Input input);
     protected abstract void detectCollision();
-    protected abstract void maintainTimescale();
+    protected abstract void changeTimescale(int change);
     protected abstract void generatePipeSet();
     protected abstract void drawStartMessage();
 

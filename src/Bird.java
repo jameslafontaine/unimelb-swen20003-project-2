@@ -31,6 +31,10 @@ public class Bird {
 
     public Rectangle getHitbox() { return hitbox; }
 
+    public boolean getHoldingWeapon() { return holdingWeapon; }
+
+    public void setHoldingWeapon(boolean state) { holdingWeapon = state; }
+
     public void resetPosition() {
         y = START_POINT.y;
     }
