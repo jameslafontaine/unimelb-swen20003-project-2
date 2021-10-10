@@ -4,6 +4,11 @@ import bagel.util.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+/**
+ * An abstract class which stores all information relating to a Level and handles interactions between
+ * different entities and the flow of gameplay
+ * @author James La Fontaine
+ */
 public abstract class Level {
     protected Image background;
     protected Bird bird;
@@ -37,14 +42,25 @@ public abstract class Level {
     protected boolean levelStarted = false;
     protected boolean levelCompleted = false;
 
-
+    /**
+     * Performs a state update for the level.
+     * @param input Stores the user's input for the current frame / update
+     */
     public abstract void update(Input input);
     protected abstract void detectCollision();
     protected abstract void generatePipeSet();
     protected abstract void drawStartMessage();
 
+    /**
+     * Gets the current state of the levelCompleted variable
+     * @return boolean A boolean which represents whether the current Level has been completed or not
+     */
     public boolean getLevelCompleted() { return levelCompleted; }
 
+    /**
+     * Detects if the bird or pipe sets have moved off the screen and resets the bird's position or
+     * removes the pipe set from the game in each respective case
+     */
     protected void detectOutOfBounds() {
         if (bird.getPosition().y < -bird.getImageHeight() / 2.0 || bird.getPosition().y > ShadowFlap.WINDOW_HEIGHT +
                                                                    bird.getImageHeight() / 2.0) {
@@ -60,6 +76,9 @@ public abstract class Level {
         }
     }
 
+    /**
+     * Detects if the bird's centre has passed a pipe sets right X coordinate for the first time
+     */
     protected void detectPipePass() {
         for (PipeSet pipeSet: pipeSets) {
             if (bird.getPosition().x > pipeSet.getRightX() && pipeSet.getHasPassed() == false) {
@@ -69,6 +88,9 @@ public abstract class Level {
         }
     }
 
+    /**
+     * Renders the life bar at the appropriate position
+     */
     protected void renderLifeBar() {
         for (int i=0; i < lives; i++) {
             FULL_LIFE.drawFromTopLeft(LIFE_POINT.x + i*LIFE_GAP , LIFE_POINT.y);
@@ -78,12 +100,19 @@ public abstract class Level {
         }
     }
 
+    /**
+     * Draws an end of level screen
+     * @param message A string which specifies the desired message to be shown at the end of the level
+     */
     protected void drawEndMessage(String message) {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(message, CENTRE_SCREEN.x - FONT.getWidth(message) / 2.0,
                      CENTRE_SCREEN.y + FONT_SIZE / 2.0);
         }
 
+    /**
+     * Draws a game over screen
+     */
     protected void drawGameOver() {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(LOSS_MESSAGE,

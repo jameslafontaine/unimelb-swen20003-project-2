@@ -10,7 +10,9 @@ public class SteelPipeSet extends PipeSet {
     private int flameFrameCount = 1;
     private int flameActiveFrameCount = 1;
 
-
+    /**
+     * Creates an instance of a SteelPipeSet by setting its image and starting coordinates, and creating hitboxes
+     */
     public SteelPipeSet() {
         pipeImage = new Image("res/level-1/steelPipe.png");
         // use level 1 pipe spawning logic
@@ -24,6 +26,9 @@ public class SteelPipeSet extends PipeSet {
         hitboxBottom = pipeImage.getBoundingBoxAt(new Point(xBottom, yBottom));
     }
 
+    /**
+     * Performs a state update for this SteelPipeSet
+     */
     public void update() {
 
         // move the pipes towards the left border of the screen
@@ -47,9 +52,9 @@ public class SteelPipeSet extends PipeSet {
                                                                                        - FLAME_GAP));
                 flameActiveFrameCount++;
                 // visualise the pipe with flame hitbox
-                //Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0 + flameImage.getHeight() / 2.0 + FLAME_GAP),
+                // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0 + flameImage.getHeight() / 2.0 + FLAME_GAP),
                 //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.RED);
-                //Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0,
+                // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0,
                 //        yBottom - pipeImage.getHeight() / 2.0 - flameImage.getHeight() / 2.0 - FLAME_GAP), pipeImage.getWidth(),
                 //           pipeImage.getHeight(), Colour.RED);
 
@@ -63,10 +68,10 @@ public class SteelPipeSet extends PipeSet {
                 flameActiveFrameCount = 1;
                 flameFrameCount = 1;
                 // visualise the pipes without flames
-                //Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
-                //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
-                //Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
-                //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+                // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
+                //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+                // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
+                //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
             }
         } else {
             // in between flame rendering we just render the pipes normally with their regular hitbox
@@ -79,10 +84,10 @@ public class SteelPipeSet extends PipeSet {
             flameFrameCount++;
 
             // visualise the pipes without flames
-            //Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
-            //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
-            //Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
-            //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+            // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
+            //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+            // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
+            //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
         }
     }
 }

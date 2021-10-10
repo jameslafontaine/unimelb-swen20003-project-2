@@ -4,6 +4,11 @@ import bagel.util.*;
 public class PlasticPipeSet extends PipeSet {
     private static final int LEVEL_ZERO = 0;
 
+    /**
+     * Creates an instance of a PlasticPipeSet by setting its image and starting coordinates, and creating hitboxes
+     * @param currentLevel An int indicating which level the PipeSet is being spawned for and therefore which spawning
+     *                     logic to use
+     */
     public PlasticPipeSet(int currentLevel) {
         pipeImage = new Image("res/level/plasticPipe.png");
         double randomNum = Math.random();
@@ -30,6 +35,10 @@ public class PlasticPipeSet extends PipeSet {
         hitboxTop = pipeImage.getBoundingBoxAt(new Point(xTop, yTop));
         hitboxBottom = pipeImage.getBoundingBoxAt(new Point(xBottom, yBottom));
     }
+
+    /**
+     * Performs a state update for this PlasticPipeSet
+     */
     public void update() {
         // move the pipes towards the left border of the screen
         xTop -= stepSize;

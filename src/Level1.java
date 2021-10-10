@@ -3,6 +3,10 @@ import bagel.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+/**
+ * A subclass of the Level class which stores attributes and methods specific to Level 1
+ * @author: James La Fontaine
+ */
 public class Level1 extends Level {
 
     private ArrayList<Weapon> weapons = new ArrayList<>();
@@ -17,7 +21,10 @@ public class Level1 extends Level {
     private static final int LEVEL_ONE = 1;
     private int weaponFrameCount = pipeSpawnFrequency / 2;
 
-
+    /**
+     * Creates an instance of the Level1 class by setting the appropriate background, creating a new Bird,
+     * and setting important metrics to level-specific values
+     */
     public Level1() {
         background = new Image("res/level-1/background.png");
         bird = new Bird(BIRD_WING_DOWN, BIRD_WING_UP);
@@ -26,6 +33,36 @@ public class Level1 extends Level {
         scoreThreshold = SCORE_THRESHOLD;
     }
 
+    /**
+     * Detects if the bird, pipe sets, or weapons have moved off the screen and resets the bird's position or
+     * removes the pipe set / weapon from the game in each respective case
+     */
+    @Override
+    protected void detectOutOfBounds() {
+        if (bird.getPosition().y < -bird.getImageHeight() / 2.0 || bird.getPosition().y > ShadowFlap.WINDOW_HEIGHT +
+                bird.getImageHeight() / 2.0) {
+            lives--;
+            bird.resetPosition();
+        }
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
+            if (pipeSet.getRightX() < LEFT_BORDER) {
+                iterPipeSet.remove();
+            }
+        }
+        ListIterator<Weapon> iterWeapon = weapons.listIterator();
+        while(iterWeapon.hasNext()) {
+            Weapon weapon = iterWeapon.next();
+            if (weapon.getRightX() < LEFT_BORDER) {
+                iterWeapon.remove();
+            }
+        }
+    }
+
+    /**
+     * Generate either a new Rock or Bomb and store it in the weapons ArrayList
+     */
     private void generateWeapon() {
         if (Math.random() < 0.5) {
             weapons.add(new Rock());
@@ -34,6 +71,9 @@ public class Level1 extends Level {
         }
     }
 
+    /**
+     * Keep a weapon attached to the bird's beak if it is currently being held by the bird
+     */
     private void keepWeaponAttached() {
         for (Weapon weapon: weapons) {
             if (weapon.getIsAttached()) {
@@ -43,8 +83,11 @@ public class Level1 extends Level {
         }
     }
 
+    /**
+     * Detects collisions between the bird, pipe sets and weapons
+     */
     protected void detectCollision() {
-        // check if the bird has collided with a pipe
+        // check if the bird has collided with a pipe and remove the pipes and one of the bird's lives if so
         ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
         while(iterPipeSet.hasNext()) {
             PipeSet pipeSet = iterPipeSet.next();
@@ -54,7 +97,8 @@ public class Level1 extends Level {
                 iterPipeSet.remove();
             }
         }
-        // check for weapon collisions with pipes
+        // check for weapon collisions with pipes, remove the weapon if so and remove the pipes if the weapon is
+        // strong enough
         iterPipeSet = pipeSets.listIterator();
         while(iterPipeSet.hasNext()) {
             PipeSet pipeSet = iterPipeSet.next();
@@ -85,10 +129,16 @@ public class Level1 extends Level {
         }
     }
 
+    /**
+     * Checks whether a weapon has exceeded its travelling range and removes it if so
+     */
     private void checkWeaponTravel() {
         weapons.removeIf(weapon -> weapon.getWasShot() && weapon.getFramesTravelled() > weapon.getShootingRange());
     }
 
+    /**
+     * Generates either a new PlasticPipeSet or a new SteelPipeSet and stores it in the pipeSet ArrayList
+     */
     protected void generatePipeSet() {
        if (Math.random() < 0.5) {
            pipeSets.add(new PlasticPipeSet(LEVEL_ONE));
@@ -97,6 +147,9 @@ public class Level1 extends Level {
        }
     }
 
+    /**
+     * Draws the start of level message
+     */
     protected void drawStartMessage() {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(START_MESSAGE, CENTRE_SCREEN.x - FONT.getWidth(START_MESSAGE) / 2.0,
@@ -105,6 +158,10 @@ public class Level1 extends Level {
                 CENTRE_SCREEN.y + FONT_SIZE / 2.0 + SHOOT_MESSAGE_GAP);
     }
 
+    /**
+     * Performs a state update for the level.
+     * @param input Stores the user's input for the current frame / update
+     */
     public void update(Input input) {
         // display the starting message until the player presses space bar for the first time and starts the level
         if (!levelStarted) {
@@ -146,6 +203,7 @@ public class Level1 extends Level {
                     }
                 }
                 background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
+                // update the bird, pipe sets and weapons
                 bird.update(input);
                 for (PipeSet pipeSet: pipeSets) {
                     pipeSet.update();
@@ -153,9 +211,10 @@ public class Level1 extends Level {
                 for (Weapon weapon: weapons) {
                     weapon.update();
                 }
+                // render the score and life bar
                 FONT.drawString("SCORE: " + score, SCORE_POINT.x, SCORE_POINT.y);
-                // FONT.drawString("TIMESCALE " + timescale, SCORE_POINT.x, SCORE_POINT.y + 100);
                 renderLifeBar();
+                // generate pipe sets and weapons at non-overlapping intervals
                 if (pipeFrameCount >= pipeSpawnFrequency) {
                     generatePipeSet();
                     pipeFrameCount = 0;
@@ -164,6 +223,7 @@ public class Level1 extends Level {
                     generateWeapon();
                     weaponFrameCount = 0;
                 }
+                // detect the relevant events and interactions between game entities
                 detectCollision();
                 detectOutOfBounds();
                 detectPipePass();
@@ -173,8 +233,10 @@ public class Level1 extends Level {
                 weaponFrameCount++;
 
             } else if (score == scoreThreshold) {
+                // the player has won, draw the win message until ESC is pressed
                 drawEndMessage(WIN_MESSAGE);
             } else if (lives == NO_LIVES) {
+                // the player has lost, draw the game over message until ESC is pressed
                 drawGameOver();
             }
         }
