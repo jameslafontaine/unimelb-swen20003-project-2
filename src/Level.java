@@ -47,6 +47,7 @@ public abstract class Level {
      * @param input Stores the user's input for the current frame / update
      */
     public abstract void update(Input input);
+    protected abstract void detectOutOfBounds();
     protected abstract void detectCollision();
     protected abstract void generatePipeSet();
     protected abstract void drawStartMessage();
@@ -57,28 +58,7 @@ public abstract class Level {
      */
     public boolean getLevelCompleted() { return levelCompleted; }
 
-    /**
-     * Detects if the bird or pipe sets have moved off the screen and resets the bird's position or
-     * removes the pipe set from the game in each respective case
-     */
-    protected void detectOutOfBounds() {
-        if (bird.getPosition().y < -bird.getImageHeight() / 2.0 || bird.getPosition().y > ShadowFlap.WINDOW_HEIGHT +
-                                                                   bird.getImageHeight() / 2.0) {
-            lives--;
-            bird.resetPosition();
-        }
-        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
-        while(iterPipeSet.hasNext()) {
-            PipeSet pipeSet = iterPipeSet.next();
-            if (pipeSet.getRightX() < LEFT_BORDER) {
-                iterPipeSet.remove();
-            }
-        }
-    }
-
-    /**
-     * Detects if the bird's centre has passed a pipe sets right X coordinate for the first time
-     */
+    // Detects if the bird's centre has passed a pipe sets right X coordinate for the first time
     protected void detectPipePass() {
         for (PipeSet pipeSet: pipeSets) {
             if (bird.getPosition().x > pipeSet.getRightX() && pipeSet.getHasPassed() == false) {
@@ -88,9 +68,7 @@ public abstract class Level {
         }
     }
 
-    /**
-     * Renders the life bar at the appropriate position
-     */
+    // Renders the life bar at the appropriate position
     protected void renderLifeBar() {
         for (int i=0; i < lives; i++) {
             FULL_LIFE.drawFromTopLeft(LIFE_POINT.x + i*LIFE_GAP , LIFE_POINT.y);
@@ -100,19 +78,14 @@ public abstract class Level {
         }
     }
 
-    /**
-     * Draws an end of level screen
-     * @param message A string which specifies the desired message to be shown at the end of the level
-     */
+    // Draws an end of level screen with the provided message
     protected void drawEndMessage(String message) {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(message, CENTRE_SCREEN.x - FONT.getWidth(message) / 2.0,
                      CENTRE_SCREEN.y + FONT_SIZE / 2.0);
         }
 
-    /**
-     * Draws a game over screen
-     */
+    // Draws a game over screen
     protected void drawGameOver() {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(LOSS_MESSAGE,
@@ -122,6 +95,4 @@ public abstract class Level {
                 CENTRE_SCREEN.x - FONT.getWidth("FINAL SCORE: k") / 2.0,
                 CENTRE_SCREEN.y + LOSS_SCORE_GAP + FONT_SIZE / 2.0);
     }
-
-
 }

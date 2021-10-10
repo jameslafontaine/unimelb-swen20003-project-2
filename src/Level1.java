@@ -33,11 +33,27 @@ public class Level1 extends Level {
         scoreThreshold = SCORE_THRESHOLD;
     }
 
-    /**
-     * Detects if the bird, pipe sets, or weapons have moved off the screen and resets the bird's position or
-     * removes the pipe set / weapon from the game in each respective case
-     */
-    @Override
+    // Generate either a new Rock or Bomb and store it in the weapons ArrayList
+    private void generateWeapon() {
+        if (Math.random() < 0.5) {
+            weapons.add(new Rock());
+        } else {
+            weapons.add(new Bomb());
+        }
+    }
+
+    // Keep a weapon attached to the bird's beak if it is currently being held by the bird
+    private void keepWeaponAttached() {
+        for (Weapon weapon: weapons) {
+            if (weapon.getIsAttached()) {
+                weapon.setX(bird.getHitbox().right());
+                weapon.setY(bird.getPosition().y);
+            }
+        }
+    }
+
+    // Detects if the bird, pipe sets, or weapons have moved off the screen and resets the bird's position or
+    // removes the pipe set / weapon from the game in each respective case
     protected void detectOutOfBounds() {
         if (bird.getPosition().y < -bird.getImageHeight() / 2.0 || bird.getPosition().y > ShadowFlap.WINDOW_HEIGHT +
                 bird.getImageHeight() / 2.0) {
@@ -60,32 +76,7 @@ public class Level1 extends Level {
         }
     }
 
-    /**
-     * Generate either a new Rock or Bomb and store it in the weapons ArrayList
-     */
-    private void generateWeapon() {
-        if (Math.random() < 0.5) {
-            weapons.add(new Rock());
-        } else {
-            weapons.add(new Bomb());
-        }
-    }
-
-    /**
-     * Keep a weapon attached to the bird's beak if it is currently being held by the bird
-     */
-    private void keepWeaponAttached() {
-        for (Weapon weapon: weapons) {
-            if (weapon.getIsAttached()) {
-                weapon.setX(bird.getHitbox().right());
-                weapon.setY(bird.getPosition().y);
-            }
-        }
-    }
-
-    /**
-     * Detects collisions between the bird, pipe sets and weapons
-     */
+    // Detects collisions between the bird, pipe sets and weapons
     protected void detectCollision() {
         // check if the bird has collided with a pipe and remove the pipes and one of the bird's lives if so
         ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
@@ -129,16 +120,12 @@ public class Level1 extends Level {
         }
     }
 
-    /**
-     * Checks whether a weapon has exceeded its travelling range and removes it if so
-     */
+    // Checks whether a weapon has exceeded its travelling range and removes it if so
     private void checkWeaponTravel() {
         weapons.removeIf(weapon -> weapon.getWasShot() && weapon.getFramesTravelled() > weapon.getShootingRange());
     }
 
-    /**
-     * Generates either a new PlasticPipeSet or a new SteelPipeSet and stores it in the pipeSet ArrayList
-     */
+    // Generates either a new PlasticPipeSet or a new SteelPipeSet and stores it in the pipeSet ArrayList
     protected void generatePipeSet() {
        if (Math.random() < 0.5) {
            pipeSets.add(new PlasticPipeSet(LEVEL_ONE));
@@ -147,9 +134,7 @@ public class Level1 extends Level {
        }
     }
 
-    /**
-     * Draws the start of level message
-     */
+    // Draws the start of level message
     protected void drawStartMessage() {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(START_MESSAGE, CENTRE_SCREEN.x - FONT.getWidth(START_MESSAGE) / 2.0,

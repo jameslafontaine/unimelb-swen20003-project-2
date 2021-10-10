@@ -8,17 +8,8 @@ import bagel.*;
  *
  * also make sure visibility modifiers are correct and there are no useless constants or variables anywhere
  *
- * add javadoc to public classes, attributes and methods (including getters, setters and constructors):
- * description of method or attribute
- * @param:
- * @return:
- *
- * for classes:
- * description
- * @author:
- * @version:
- *
  */
+
 public class ShadowFlap extends AbstractGame {
 
     /**

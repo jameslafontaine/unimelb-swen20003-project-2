@@ -30,9 +30,24 @@ public class Level0 extends Level {
         scoreThreshold = SCORE_THRESHOLD;
     }
 
-    /**
-     * Detect collisions between the bird and the pipe sets
-     */
+    // Detects if the bird or pipe sets have moved off the screen and resets the bird's position or
+    // removes the pipe set from the game in each respective case
+    protected void detectOutOfBounds() {
+        if (bird.getPosition().y < -bird.getImageHeight() / 2.0 || bird.getPosition().y > ShadowFlap.WINDOW_HEIGHT +
+                bird.getImageHeight() / 2.0) {
+            lives--;
+            bird.resetPosition();
+        }
+        ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
+        while(iterPipeSet.hasNext()) {
+            PipeSet pipeSet = iterPipeSet.next();
+            if (pipeSet.getRightX() < LEFT_BORDER) {
+                iterPipeSet.remove();
+            }
+        }
+    }
+
+    // Detect collisions between the bird and the pipe sets
     protected void detectCollision() {
         ListIterator<PipeSet> iterPipeSet = pipeSets.listIterator();
         while(iterPipeSet.hasNext()) {
@@ -45,16 +60,12 @@ public class Level0 extends Level {
         }
     }
 
-    /**
-     * Generates a new PipeSet and stores it in the pipeSet ArrayList
-     */
+    // Generates a new PipeSet and stores it in the pipeSet ArrayList
     protected void generatePipeSet() {
         pipeSets.add(new PlasticPipeSet(LEVEL_ZERO));
     }
 
-    /**
-     * Draws the start of level message
-     */
+    // Draws the start of level message
     protected void drawStartMessage() {
         background.draw(CENTRE_SCREEN.x, CENTRE_SCREEN.y);
         FONT.drawString(START_MESSAGE, CENTRE_SCREEN.x - FONT.getWidth(START_MESSAGE) / 2.0,

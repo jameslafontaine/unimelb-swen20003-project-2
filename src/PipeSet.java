@@ -91,11 +91,4 @@ public abstract class PipeSet {
      * Performs a state update for the PipeSet
      */
     public abstract void update();
-
-        // visualise the pipe hitboxes (put these in the subclasses)
-
-        // Drawing.drawRectangle(new Point(xTop - pipe.getWidth() / 2.0, yTop - pipe.getHeight() / 2.0),
-        //         pipe.getWidth(), pipe.getHeight(), Colour.WHITE);
-        // Drawing.drawRectangle(new Point(xBottom - pipe.getWidth() / 2.0, yBottom - pipe.getHeight() / 2.0),
-        //         pipe.getWidth(), pipe.getHeight(), Colour.WHITE);
 }
