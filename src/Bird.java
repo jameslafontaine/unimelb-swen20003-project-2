@@ -96,9 +96,5 @@ public class Bird {
             hitbox.moveTo(new Point(x - birdWingDown.getWidth() / 2.0, y - birdWingDown.getHeight() / 2.0));
             frameCount++;
         }
-
-        // visualise the bird's hitbox
-        // Drawing.drawRectangle(new Point(x - birdWingDown.getWidth() / 2.0, y - birdWingDown.getHeight() / 2.0),
-        //                                                birdWingDown.getWidth(), birdWingDown.getHeight(), Colour.WHITE);
     }
 }

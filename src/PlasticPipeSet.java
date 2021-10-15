@@ -52,12 +52,5 @@ public class PlasticPipeSet extends PipeSet {
         hitboxTop.moveTo(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0));
         hitboxBottom.moveTo(new Point(xBottom - pipeImage.getWidth() / 2.0,
                                       yBottom - pipeImage.getHeight() / 2.0));
-
-        // visualise the pipe hitboxes
-
-        // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
-        //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
-        // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
-        //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
     }
 }

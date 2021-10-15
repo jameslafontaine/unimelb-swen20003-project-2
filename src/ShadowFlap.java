@@ -2,12 +2,6 @@ import bagel.*;
 
 /**
  * @author: James La Fontaine
- *
- * have to remove debugging code like the hitbox visualisers and timescale message, try to clean up code into
- * methods wherever possible or even recode if there is a cleaner solution
- *
- * also make sure visibility modifiers are correct and there are no useless constants or variables anywhere
- *
  */
 
 public class ShadowFlap extends AbstractGame {
