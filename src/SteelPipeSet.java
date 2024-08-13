@@ -50,6 +50,12 @@ public class SteelPipeSet extends PipeSet {
                 hitboxBottom.moveTo(new Point(xBottom - pipeImage.getWidth() / 2.0,
                                               yBottom - pipeImage.getHeight() / 2.0 - flameImage.getHeight() / 2.0
                                                                                        - FLAME_GAP));
+                // visualise the pipe with flame hitbox
+                // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0 + flameImage.getHeight() / 2.0 + FLAME_GAP),
+                //        pipeImage.getWidth(), pipeImage.getHeight(), Colour.RED);
+                // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0,
+                //        yBottom - pipeImage.getHeight() / 2.0 - flameImage.getHeight() / 2.0 - FLAME_GAP), pipeImage.getWidth(),
+                //           pipeImage.getHeight(), Colour.RED);
                 flameActiveFrameCount++;
             } else {
                 // we are done rendering the flame for now and must reset the appropriate frame counts
@@ -58,6 +64,12 @@ public class SteelPipeSet extends PipeSet {
                 hitboxTop.moveTo(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0));
                 hitboxBottom.moveTo(new Point(xBottom - pipeImage.getWidth() / 2.0,
                         yBottom - pipeImage.getHeight() / 2.0));
+
+                // visualise the pipes without flames
+                // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
+                //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+                // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
+                //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
                 flameActiveFrameCount = 1;
                 flameFrameCount = 1;
             }
@@ -68,7 +80,11 @@ public class SteelPipeSet extends PipeSet {
             hitboxTop.moveTo(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0));
             hitboxBottom.moveTo(new Point(xBottom - pipeImage.getWidth() / 2.0,
                     yBottom - pipeImage.getHeight() / 2.0));
-
+            // visualise the pipes without flames
+            // Drawing.drawRectangle(new Point(xTop - pipeImage.getWidth() / 2.0, yTop - pipeImage.getHeight() / 2.0),
+            //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
+            // Drawing.drawRectangle(new Point(xBottom - pipeImage.getWidth() / 2.0, yBottom - pipeImage.getHeight() / 2.0),
+            //         pipeImage.getWidth(), pipeImage.getHeight(), Colour.WHITE);
             flameFrameCount++;
         }
     }
